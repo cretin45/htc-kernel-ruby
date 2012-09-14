@@ -1,6 +1,7 @@
 /* include/linux/msm_audio.h
  *
  * Copyright (C) 2008 Google, Inc.
+ * Copyright (c) 2009-2010, Code Aurora Forum. All rights reserved.
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -12,10 +13,6 @@
  * GNU General Public License for more details.
  *
  */
-
-#if defined(CONFIG_ARCH_MSM8X60)
-#include <linux/msm_audio_8X60.h>
-#endif
 
 #ifndef __LINUX_MSM_AUDIO_H
 #define __LINUX_MSM_AUDIO_H
@@ -49,11 +46,11 @@
 #define AUDIO_SET_INCALL _IOW(AUDIO_IOCTL_MAGIC, 19, struct msm_voicerec_mode)
 #define AUDIO_GET_NUM_SND_DEVICE _IOR(AUDIO_IOCTL_MAGIC, 20, unsigned)
 #define AUDIO_GET_SND_DEVICES _IOWR(AUDIO_IOCTL_MAGIC, 21, \
-				struct msm_snd_device_list)
+struct msm_snd_device_list)
 #define AUDIO_ENABLE_SND_DEVICE _IOW(AUDIO_IOCTL_MAGIC, 22, unsigned)
 #define AUDIO_DISABLE_SND_DEVICE _IOW(AUDIO_IOCTL_MAGIC, 23, unsigned)
 #define AUDIO_ROUTE_STREAM _IOW(AUDIO_IOCTL_MAGIC, 24, \
-				struct msm_audio_route_config)
+struct msm_audio_route_config)
 #define AUDIO_GET_PCM_CONFIG _IOR(AUDIO_IOCTL_MAGIC, 30, unsigned)
 #define AUDIO_SET_PCM_CONFIG _IOW(AUDIO_IOCTL_MAGIC, 31, unsigned)
 #define AUDIO_SWITCH_DEVICE  _IOW(AUDIO_IOCTL_MAGIC, 32, unsigned)
@@ -64,35 +61,38 @@
 #define AUDIO_REINIT_ACDB    _IOW(AUDIO_IOCTL_MAGIC, 39, unsigned)
 #define AUDIO_OUTPORT_FLUSH  _IOW(AUDIO_IOCTL_MAGIC, 40, unsigned short)
 #define AUDIO_SET_ERR_THRESHOLD_VALUE _IOW(AUDIO_IOCTL_MAGIC, 41, \
-					unsigned short)
+unsigned short)
 #define AUDIO_GET_BITSTREAM_ERROR_INFO _IOR(AUDIO_IOCTL_MAGIC, 42, \
-			       struct msm_audio_bitstream_error_info)
+struct msm_audio_bitstream_error_info)
+
+#define AUDIO_SET_Q6_EFFECT  _IOW(AUDIO_IOCTL_MAGIC, 43, unsigned)
+
 /* Qualcomm extensions */
 #define AUDIO_SET_STREAM_CONFIG   _IOW(AUDIO_IOCTL_MAGIC, 80, \
-				struct msm_audio_stream_config)
+struct msm_audio_stream_config)
 #define AUDIO_GET_STREAM_CONFIG   _IOR(AUDIO_IOCTL_MAGIC, 81, \
-				struct msm_audio_stream_config)
+struct msm_audio_stream_config)
 #define AUDIO_GET_SESSION_ID _IOR(AUDIO_IOCTL_MAGIC, 82, unsigned short)
 #define AUDIO_GET_STREAM_INFO   _IOR(AUDIO_IOCTL_MAGIC, 83, \
-			       struct msm_audio_bitstream_info)
+struct msm_audio_bitstream_info)
 #define AUDIO_SET_PAN       _IOW(AUDIO_IOCTL_MAGIC, 84, unsigned)
 #define AUDIO_SET_QCONCERT_PLUS       _IOW(AUDIO_IOCTL_MAGIC, 85, unsigned)
 #define AUDIO_SET_MBADRC       _IOW(AUDIO_IOCTL_MAGIC, 86, unsigned)
 #define AUDIO_SET_VOLUME_PATH   _IOW(AUDIO_IOCTL_MAGIC, 87, \
-				     struct msm_vol_info)
+struct msm_vol_info)
 #define AUDIO_SET_MAX_VOL_ALL _IOW(AUDIO_IOCTL_MAGIC, 88, unsigned)
 #define AUDIO_ENABLE_AUDPRE  _IOW(AUDIO_IOCTL_MAGIC, 89, unsigned)
 #define AUDIO_SET_AGC        _IOW(AUDIO_IOCTL_MAGIC, 90, unsigned)
 #define AUDIO_SET_NS         _IOW(AUDIO_IOCTL_MAGIC, 91, unsigned)
 #define AUDIO_SET_TX_IIR     _IOW(AUDIO_IOCTL_MAGIC, 92, unsigned)
 #define AUDIO_GET_BUF_CFG    _IOW(AUDIO_IOCTL_MAGIC, 93, \
-					struct msm_audio_buf_cfg)
+struct msm_audio_buf_cfg)
 #define AUDIO_SET_BUF_CFG    _IOW(AUDIO_IOCTL_MAGIC, 94, \
-					struct msm_audio_buf_cfg)
+struct msm_audio_buf_cfg)
 #define AUDIO_SET_ACDB_BLK _IOW(AUDIO_IOCTL_MAGIC, 95,  \
-					struct msm_acdb_cmd_device)
+struct msm_acdb_cmd_device)
 #define AUDIO_GET_ACDB_BLK _IOW(AUDIO_IOCTL_MAGIC, 96,  \
-					struct msm_acdb_cmd_device)
+struct msm_acdb_cmd_device)
 
 #define	AUDIO_MAX_COMMON_IOCTL_NUM	100
 
@@ -138,6 +138,7 @@
 #define NS_ENABLE		0x0002
 #define TX_IIR_ENABLE		0x0004
 #define FLUENCE_ENABLE		0x0008
+#define STEREO_RECORD_ENABLE	0x0016
 
 #define VOC_REC_UPLINK		0x00
 #define VOC_REC_DOWNLINK	0x01
@@ -248,7 +249,7 @@ struct msm_audio_pcm_config {
 	uint32_t pcm_feedback;	/* 0 - disable > 0 - enable */
 	uint32_t buffer_count;	/* Number of buffers to allocate */
 	uint32_t buffer_size;	/* Size of buffer for capturing of
-				   PCM samples */
+                             PCM samples */
 };
 
 #define AUDIO_EVENT_SUSPEND 0
@@ -332,7 +333,7 @@ struct msm_audio_eq_band {
 	uint32_t     filter_type; /* Filter band type */
 	uint32_t     center_freq_hz; /* Filter band center frequency */
 	uint32_t     filter_gain; /* Filter band initial gain (dB) */
-			/* Range is +12 dB to -12 dB with 1dB increments. */
+    /* Range is +12 dB to -12 dB with 1dB increments. */
 	uint32_t     q_factor;
 } __attribute__ ((packed));
 
